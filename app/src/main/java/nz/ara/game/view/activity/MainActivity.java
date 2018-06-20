@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.media.MediaPlayer;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -26,15 +27,19 @@ import com.example.yac0105.game.databinding.ActivityMainBinding;
 import java.io.File;
 
 import nz.ara.game.model.em.constvalue.Const;
+import nz.ara.game.view.views.BottomView;
 import nz.ara.game.view.views.MapView;
 import nz.ara.game.view.views.RoleView;
+import nz.ara.game.view.views.TitleView;
 import nz.ara.game.viewmodel.MainViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-    private Spinner level_spinner;
+    private TitleView titleView;
+
+    private BottomView bottomView;
 
     private MapView mapView;
 
@@ -42,17 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RoleView minView;
 
-    private TextView textViewName;
-
-    private Button reset;
-
-    private Button pause;
-
-    private Button save;
-
-    private Button loadByFile;
-
-    private Button help;
+    private Spinner level_spinner;
 
     private String level_string = "Level-1";
 
@@ -90,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
+
         mapView = findViewById(R.id.mapview);
 
         if(mapView == null){
@@ -110,10 +106,23 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
+        titleView = findViewById(R.id.titleView);
+        titleView.setHelpButtonListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                helpButtonClicked();
+            }});
 
-        level_spinner = findViewById(R.id.level_spinner);
 
-        level_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        bottomView =  findViewById(R.id.bott_view);
+
+        if(bottomView==null){
+            ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
+
+            bottomView = (BottomView) constraintLayout.getChildAt(2);
+        }
+
+        level_spinner = bottomView.setItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
@@ -131,20 +140,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        reset = findViewById(R.id.button_reset);
-
-        reset.setOnClickListener(
-            new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    resetButtonClicked();
+        bottomView.setResetButtonListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        resetButtonClicked();
+                    }
                 }
-            }
         );
 
-        pause = findViewById(R.id.button_pause);
 
-        pause.setOnClickListener(
+        bottomView.setPauseButtonListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -153,9 +159,8 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-        save = findViewById(R.id.button_save);
 
-        save.setOnClickListener(
+        bottomView.setSaveButtonListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -165,23 +170,14 @@ public class MainActivity extends AppCompatActivity {
         );
 
 
-        loadByFile = findViewById(R.id.button_new);
-
-        loadByFile.setOnClickListener(new View.OnClickListener() {
+        bottomView.setLoadByFileButtonListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadByFileButtonClicked();
             }}
         );
 
-        help = findViewById(R.id.button_help);
 
-        help.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                helpButtonClicked();
-            }}
-        );
 
         if(mainViewModel == null){
             mainViewModel = new MainViewModel(this,level_string);

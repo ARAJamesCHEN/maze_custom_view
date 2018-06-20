@@ -6,14 +6,26 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import nz.ara.game.model.in.point.Point;
+import nz.ara.game.view.views.BottomView;
 import nz.ara.game.view.views.MapView;
 import nz.ara.game.view.views.RoleView;
+import nz.ara.game.view.views.TitleView;
 
 /**
  * Created by yac0105 on 22/05/2018.
  */
 
 public class ViewBindingAdapter {
+
+    @BindingAdapter("app:levels")
+    public static void setBottomViewLevels(BottomView bottomView, String[] levels) {
+        bottomView.setLevels(levels);
+    }
+
+    @BindingAdapter("app:moveCount")
+    public static void setAppMoveCount(TitleView titleView, String moveCount) {
+        titleView.setMoveText(moveCount);
+    }
 
     @BindingAdapter("app:itemsWallAboveStr")
     public static void setItemsWallAboveStr(MapView mapView, String wallAbovePointListStr) {
